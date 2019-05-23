@@ -102,3 +102,11 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# my shit
+*.bam
+*.bai
+*.vcf
+*.dict
+*.fa
+*.fai

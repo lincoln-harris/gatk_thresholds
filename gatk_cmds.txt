@@ -1,0 +1,17 @@
+# launch docker image
+sudo docker run -it --entrypoint "/bin/bash" -v $PWD:/bam broadinstitute/gatk
+
+# index genome fasta file
+samtools faidx hg38-plus.fa 
+
+# make sequence dict
+gatk CreateSequenceDictionary --REFERENCE hg38-plus.fa
+
+# add read groups to existing bam file
+gatk AddOrReplaceReadGroups -I bam/A11_1001000318_S1.homo.Aligned.out.sorted.bam -O bam/A11_1001000318_S1.homo.Aligned.out.sorted.readgroup.bam -RGID 4 -RGLB lib1 -RGPL illumina -RGPU unit1 -RGSM 20
+
+# index new bam file
+samtools index bam/A11_1001000318_S1.homo.Aligned.out.sorted.readgroup.bam bam/A11_1001000318_S1.homo.Aligned.out.sorted.readgroup.bam.bai
+
+# run HaploCaller
+gatk HaplotypeCaller -R hg38-plus.fa -O vcf/testOut -I bam/A11_1001000318_S1.homo.Aligned.out.sorted.readgroup.bam
